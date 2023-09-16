@@ -1,2 +1,1 @@
-# KtaneClockCounter
- Ktane module ↻↺
+#[ModKit Wiki](../../wiki)
