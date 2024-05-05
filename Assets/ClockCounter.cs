@@ -226,7 +226,7 @@ public class ClockCounter : MonoBehaviour {
 	int mod(int a, int b) {  return ((a %= b) < 0) ? a+b : a;  }
 
 #pragma warning disable IDE0051 // Remove unused private members
-    readonly string TwitchHelpMessage = "\"!{0} press 1 2 3 4 5 6 7 8 9 10\" [Presses the 1st, 2nd, 3rd, 4th, 5th, 6th, 7th, 8th, 9th, 10th buttons in reading order of the module. Chain presses with spaces.]";
+    readonly string TwitchHelpMessage = "\"!{0} press 1 2 3 4 5 6 7 8 9 10\" [Presses the 1st, 2nd, 3rd, 4th, 5th, 6th, 7th, 8th, 9th, 10th buttons in column reading order of the module. (TOP TO BOTTOM, THEN LEFT TO RIGHT) Chain presses with spaces.]";
 #pragma warning restore IDE0051 // Remove unused private members
 
     IEnumerator ProcessTwitchCommand(string cmd)
