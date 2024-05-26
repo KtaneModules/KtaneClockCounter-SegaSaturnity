@@ -224,5 +224,56 @@ public class ClockCounter : MonoBehaviour {
 	}
 	
 	int mod(int a, int b) {  return ((a %= b) < 0) ? a+b : a;  }
- 
+
+#pragma warning disable IDE0051 // Remove unused private members
+    readonly string TwitchHelpMessage = "\"!{0} press 1 2 3 4 5 6 7 8 9 10\" [Presses the 1st, 2nd, 3rd, 4th, 5th, 6th, 7th, 8th, 9th, 10th buttons in column reading order of the module. (TOP TO BOTTOM, THEN LEFT TO RIGHT) Chain presses with spaces.]";
+#pragma warning restore IDE0051 // Remove unused private members
+
+    IEnumerator ProcessTwitchCommand(string cmd)
+    {
+		var intCmd = cmd.ToLowerInvariant().Split();
+		if (intCmd.Any())
+        {
+			if (intCmd.First() != "press")
+            {
+				yield return "sendtochaterror Button presses for this module must start with \"press\". No button presses will be accepted without it.";
+				yield break;
+            }
+			var allIdxesToPress = new List<int>();
+			foreach (var possibleNum in intCmd.Skip(1))
+            {
+				int value;
+				if (!int.TryParse(possibleNum, out value) || value < 1 || value > 10)
+                {
+					yield return "sendtochaterror \"" + possibleNum + "\" was not a valid number to press. Stopping here.";
+					yield break;
+				}
+				allIdxesToPress.Add(value - 1);
+            }
+			if (!allIdxesToPress.Any())
+            {
+				yield return "sendtochaterror No buttons were specified! Did you forget to insert any numbers?";
+				yield break;
+			}
+			yield return null;
+			foreach (var idx in allIdxesToPress)
+            {
+				buttons[idx].OnInteract();
+				yield return new WaitForSeconds(0.1f);
+			}
+        }
+		yield break;
+    }
+
+	IEnumerator TwitchHandleForcedSolve()
+    {
+		if (count > 0 && !arr_in.Take(count).SequenceEqual(og_ans.Take(count)))
+			reset();
+		var orderAnsIdx = Enumerable.Range(0, 10).Select(a => answer.IndexOf(b => b == og_ans[a]));
+		foreach (var idx in orderAnsIdx)
+        {
+			buttons[idx].OnInteract();
+			yield return new WaitForSeconds(0.1f);
+		}
+    }
 }
